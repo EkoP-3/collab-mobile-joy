@@ -4,7 +4,7 @@ import { ICON_OPTIONS, TIME_OPTIONS, type Habit } from "@/lib/habits";
 export type HabitDraft = { id?: string; name: string; icon: string; time: string };
 
 type Props = {
-  habit?: Habit;
+  habit?: Habit | undefined;
   onClose: () => void;
   onSave: (draft: HabitDraft) => void;
   onDelete: (id: string) => void;
@@ -36,13 +36,17 @@ export function HabitSheet({ habit, onClose, onSave, onDelete }: Props) {
     };
   }, [onClose]);
 
-  const submit = () => {
+const submit = () => {
     const trimmed = name.trim();
     if (!trimmed) {
       setError(true);
       return;
     }
-    onSave({ id: habit?.id, name: trimmed, icon, time });
+    onSave(
+      habit
+        ? { id: habit.id, name: trimmed, icon, time }
+        : { name: trimmed, icon, time },
+    );
   };
 
   return (
