@@ -1,8 +1,11 @@
+export type Difficulty = "kolay" | "orta" | "zor";
+
 export type Habit = {
   id: string;
   name: string;
   icon: string;
   time: string;
+  difficulty: Difficulty;
   createdAt: string;
   completions: Record<string, boolean>;
 };
@@ -11,7 +14,33 @@ export const STORAGE_KEY = "momentum-habits-v1";
 
 export const TIME_OPTIONS = ["Sabah", "Öğle", "Akşam"] as const;
 
+export const DIFFICULTY_OPTIONS: Difficulty[] = ["kolay", "orta", "zor"];
+
+export const DIFFICULTY_META: Record<Difficulty, { label: string; dots: number; points: number }> = {
+  kolay: { label: "Kolay", dots: 1, points: 1 },
+  orta: { label: "Orta", dots: 2, points: 2 },
+  zor: { label: "Zor", dots: 3, points: 3 },
+};
+
 export const ICON_OPTIONS = ["💧", "🧘", "📖", "🏃", "✍️", "💪", "🥗", "😴", "🚿", "🧹", "🎨", "📵"];
+
+/** Uygulamanın önerdiği hazır alışkanlıklar. */
+export type Suggestion = { name: string; icon: string; time: string; difficulty: Difficulty };
+
+export const SUGGESTIONS: Suggestion[] = [
+  { name: "8 bardak su iç", icon: "💧", time: "Sabah", difficulty: "kolay" },
+  { name: "10 dk meditasyon", icon: "🧘", time: "Sabah", difficulty: "orta" },
+  { name: "20 sayfa kitap oku", icon: "📖", time: "Akşam", difficulty: "zor" },
+  { name: "30 dk yürüyüş", icon: "🏃", time: "Akşam", difficulty: "orta" },
+  { name: "Şükran günlüğü yaz", icon: "✍️", time: "Akşam", difficulty: "kolay" },
+  { name: "20 dk spor yap", icon: "💪", time: "Sabah", difficulty: "zor" },
+  { name: "Sebze ağırlıklı bir öğün", icon: "🥗", time: "Öğle", difficulty: "orta" },
+  { name: "23:00'te yat", icon: "😴", time: "Akşam", difficulty: "zor" },
+  { name: "Soğuk duş al", icon: "🚿", time: "Sabah", difficulty: "zor" },
+  { name: "10 dk toplan / düzenle", icon: "🧹", time: "Akşam", difficulty: "kolay" },
+  { name: "15 dk yaratıcı çalışma", icon: "🎨", time: "Öğle", difficulty: "orta" },
+  { name: "1 saat ekransız zaman", icon: "📵", time: "Akşam", difficulty: "zor" },
+];
 
 export function uid(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -77,6 +106,19 @@ export function bestStreak(habit: Habit): number {
   return best;
 }
 
+/** Zorluğa göre ağırlıklı günlük puan. */
+export function dayScore(habits: Habit[], today: Date): { earned: number; total: number } {
+  const key = dateKey(today);
+  let earned = 0;
+  let total = 0;
+  for (const h of habits) {
+    const p = DIFFICULTY_META[h.difficulty]?.points ?? 1;
+    total += p;
+    if (h.completions[key]) earned += p;
+  }
+  return { earned, total };
+}
+
 export type DayCell = {
   key: string;
   label: string;
@@ -93,7 +135,7 @@ export function weekCells(habits: Habit[], today: Date): DayCell[] {
     d.setDate(mon.getDate() + i);
     const key = dateKey(d);
     const done = habits.filter((h) => h.completions[key]).length;
-cells.push({
+    cells.push({
       key,
       label: labels[i] ?? "",
       ratio: habits.length ? done / habits.length : 0,
@@ -119,6 +161,18 @@ export function weekStats(habits: Habit[], today: Date): { done: number; total: 
   return { done, total, pct: total ? Math.round((done / total) * 100) : 0 };
 }
 
+function normalize(h: Partial<Habit>): Habit {
+  return {
+    id: h.id ?? uid(),
+    name: h.name ?? "Alışkanlık",
+    icon: h.icon ?? "💧",
+    time: h.time ?? "Sabah",
+    difficulty: (h.difficulty as Difficulty) ?? "orta",
+    createdAt: h.createdAt ?? new Date().toISOString(),
+    completions: h.completions ?? {},
+  };
+}
+
 export function loadHabits(): Habit[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -127,8 +181,8 @@ export function loadHabits(): Habit[] {
       saveHabits(seeded);
       return seeded;
     }
-    const parsed = JSON.parse(raw) as Habit[];
-    return Array.isArray(parsed) ? parsed : seedHabits();
+    const parsed = JSON.parse(raw) as Partial<Habit>[];
+    return Array.isArray(parsed) ? parsed.map(normalize) : seedHabits();
   } catch {
     return seedHabits();
   }
@@ -156,10 +210,10 @@ function seedHabits(): Habit[] {
     return out;
   };
   return [
-    { id: uid(), name: "8 bardak su iç", icon: "💧", time: "Sabah", createdAt: ago(30), completions: { ...span(6, 11), ...span(0, 4) } },
-    { id: uid(), name: "10 dk meditasyon", icon: "🧘", time: "Sabah", createdAt: ago(20), completions: { ...span(6, 15), ...span(0, 4) } },
-    { id: uid(), name: "20 sayfa kitap oku", icon: "📖", time: "Akşam", createdAt: ago(14), completions: span(1, 9) },
-    { id: uid(), name: "Akşam 30 dk yürüyüş", icon: "🏃", time: "Akşam", createdAt: ago(45), completions: span(0, 11) },
-    { id: uid(), name: "Şükran günlüğü yaz", icon: "✍️", time: "Akşam", createdAt: ago(2), completions: span(1, 1) },
+    { id: uid(), name: "8 bardak su iç", icon: "💧", time: "Sabah", difficulty: "kolay", createdAt: ago(30), completions: { ...span(6, 11), ...span(0, 4) } },
+    { id: uid(), name: "10 dk meditasyon", icon: "🧘", time: "Sabah", difficulty: "orta", createdAt: ago(20), completions: { ...span(6, 15), ...span(0, 4) } },
+    { id: uid(), name: "20 sayfa kitap oku", icon: "📖", time: "Akşam", difficulty: "zor", createdAt: ago(14), completions: span(1, 9) },
+    { id: uid(), name: "Akşam 30 dk yürüyüş", icon: "🏃", time: "Akşam", difficulty: "orta", createdAt: ago(45), completions: span(0, 11) },
+    { id: uid(), name: "Şükran günlüğü yaz", icon: "✍️", time: "Akşam", difficulty: "kolay", createdAt: ago(2), completions: span(1, 1) },
   ];
 }
