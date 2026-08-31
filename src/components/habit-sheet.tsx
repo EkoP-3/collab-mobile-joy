@@ -11,15 +11,15 @@ type Props = {
 };
 
 export function HabitSheet({ habit, onClose, onSave, onDelete }: Props) {
-  const [name, setName] = useState("");
-  const [icon, setIcon] = useState(ICON_OPTIONS[0]);
-  const [time, setTime] = useState<string>(TIME_OPTIONS[0]);
+const [name, setName] = useState("");
+  const [icon, setIcon] = useState<string>(ICON_OPTIONS[0] ?? "💧");
+  const [time, setTime] = useState<string>(TIME_OPTIONS[0] ?? "Sabah");
   const [error, setError] = useState(false);
 
-  useEffect(() => {
+useEffect(() => {
     setName(habit?.name ?? "");
-    setIcon(habit?.icon ?? ICON_OPTIONS[0]);
-    setTime(habit?.time ?? TIME_OPTIONS[0]);
+    setIcon(habit?.icon ?? ICON_OPTIONS[0] ?? "💧");
+    setTime(habit?.time ?? TIME_OPTIONS[0] ?? "Sabah");
     setError(false);
   }, [habit]);
 

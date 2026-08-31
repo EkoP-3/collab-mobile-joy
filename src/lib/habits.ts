@@ -29,8 +29,8 @@ export function dateKey(d: Date): string {
 }
 
 export function parseKey(key: string): Date {
-  const [y, m, d] = key.split("-").map(Number);
-  return new Date(y, m - 1, d);
+  const parts = key.split("-");
+  return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
 }
 
 export function startOfWeek(d: Date): Date {
@@ -93,9 +93,9 @@ export function weekCells(habits: Habit[], today: Date): DayCell[] {
     d.setDate(mon.getDate() + i);
     const key = dateKey(d);
     const done = habits.filter((h) => h.completions[key]).length;
-    cells.push({
+cells.push({
       key,
-      label: labels[i],
+      label: labels[i] ?? "",
       ratio: habits.length ? done / habits.length : 0,
       isToday: key === dateKey(today),
     });
