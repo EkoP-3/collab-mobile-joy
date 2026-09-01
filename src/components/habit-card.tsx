@@ -1,4 +1,4 @@
-import { currentStreak, type Habit } from "@/lib/habits";
+import { currentStreak, DIFFICULTY_META, type Habit } from "@/lib/habits";
 
 type Props = {
   habit: Habit;
@@ -42,7 +42,15 @@ export function HabitCard({ habit, today, done, onToggle, onEdit }: Props) {
         >
           {habit.name}
         </p>
-        <p className="mt-0.5 text-xs font-medium text-inksoft">{sub}</p>
+        <div className="mt-0.5 flex items-center gap-2">
+          <span className="truncate text-xs font-medium text-inksoft">{sub}</span>
+          <span
+            className="shrink-0 rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand ring-1 ring-brand/20"
+            title={`Zorluk: ${DIFFICULTY_META[habit.difficulty].label}`}
+          >
+            {DIFFICULTY_META[habit.difficulty].label}
+          </span>
+        </div>
       </div>
       <button
         type="button"
