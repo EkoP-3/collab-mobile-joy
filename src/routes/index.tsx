@@ -5,23 +5,38 @@ import { StreakCard } from "@/components/streak-card";
 import { HabitCard } from "@/components/habit-card";
 import { WeekCard } from "@/components/week-card";
 import { HabitSheet, type HabitDraft } from "@/components/habit-sheet";
+import { SuggestionsCard } from "@/components/suggestions-card";
+import { ScheduleCard } from "@/components/schedule-card";
+import { ScheduleSheet, type ScheduleDraft } from "@/components/schedule-sheet";
+import { ReminderBanner } from "@/components/reminder-banner";
 import { useHabits } from "@/hooks/use-habits";
-import { bestStreak, currentStreak, dateKey, uid, type Habit } from "@/lib/habits";
+import { useSchedule } from "@/hooks/use-schedule";
+import { useReminders } from "@/hooks/use-reminders";
+import {
+  bestStreak,
+  currentStreak,
+  dateKey,
+  dayScore,
+  uid,
+  type Habit,
+  type Suggestion,
+} from "@/lib/habits";
+import type { ScheduleItem } from "@/lib/schedule";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Momentum — Alışkanlık Takibi" },
+      { title: "Momentum — Alışkanlık ve Günlük Program Takibi" },
       {
         name: "description",
         content:
-          "Alışkanlıklarını takip et, serilerini koru. Tüm veriler cihazında kalır, hesap gerekmez.",
+          "Alışkanlık önerileri, kendi görevlerin, zorluk seviyeleri ve saat saat günlük program. Tüm veriler cihazında kalır, hesap gerekmez.",
       },
-      { property: "og:title", content: "Momentum — Alışkanlık Takibi" },
+      { property: "og:title", content: "Momentum — Alışkanlık ve Günlük Program Takibi" },
       {
         property: "og:description",
         content:
-          "Alışkanlıklarını takip et, serilerini koru. Tüm veriler cihazında kalır, hesap gerekmez.",
+          "Alışkanlık önerileri, kendi görevlerin, zorluk seviyeleri ve saat saat günlük program. Tüm veriler cihazında kalır.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -32,7 +47,11 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { habits, today, toggleToday, upsert, remove } = useHabits();
+  const { items, upsert: upsertItem, remove: removeItem, toggleDone } = useSchedule();
+  const scheduleItems = items ?? [];
+  const { permission, request } = useReminders(scheduleItems);
   const [sheet, setSheet] = useState<{ open: boolean; habit?: Habit }>({ open: false });
+  const [planSheet, setPlanSheet] = useState<{ open: boolean; item?: ScheduleItem }>({ open: false });
 
   // `today` is set client-side only (local date), so the first render shows a skeleton.
   if (!today) {
@@ -54,12 +73,19 @@ function Index() {
   const current = list.length ? Math.max(...list.map((h) => currentStreak(h, today))) : 0;
   const best = list.length ? Math.max(...list.map((h) => bestStreak(h))) : 0;
   const allDone = list.length > 0 && doneCount === list.length;
+  const score = dayScore(list, today);
 
   const handleSave = (draft: HabitDraft) => {
     if (draft.id) {
       const existing = list.find((h) => h.id === draft.id);
       if (existing) {
-        upsert({ ...existing, name: draft.name, icon: draft.icon, time: draft.time });
+        upsert({
+          ...existing,
+          name: draft.name,
+          icon: draft.icon,
+          time: draft.time,
+          difficulty: draft.difficulty,
+        });
       }
     } else {
       upsert({
@@ -67,6 +93,7 @@ function Index() {
         name: draft.name,
         icon: draft.icon,
         time: draft.time,
+        difficulty: draft.difficulty,
         createdAt: today.toISOString(),
         completions: {},
       });
@@ -77,6 +104,32 @@ function Index() {
   const handleDelete = (id: string) => {
     remove(id);
     setSheet({ open: false });
+  };
+
+  const addSuggestion = (s: Suggestion) => {
+    upsert({
+      id: uid(),
+      name: s.name,
+      icon: s.icon,
+      time: s.time,
+      difficulty: s.difficulty,
+      createdAt: today.toISOString(),
+      completions: {},
+    });
+  };
+
+  const handlePlanSave = (draft: ScheduleDraft) => {
+    const existing = draft.id ? scheduleItems.find((x) => x.id === draft.id) : undefined;
+    const next: ScheduleItem = {
+      id: draft.id ?? uid(),
+      start: draft.start,
+      title: draft.title,
+      remind: draft.remind,
+      done: existing?.done ?? {},
+    };
+    if (draft.end) next.end = draft.end;
+    upsertItem(next);
+    setPlanSheet({ open: false });
   };
 
   return (
@@ -135,20 +188,37 @@ function Index() {
               </button>
             </div>
           ) : (
-            <div className="flex flex-col gap-3">
-              {list.map((h) => (
-                <HabitCard
-                  key={h.id}
-                  habit={h}
-                  today={today}
-                  done={Boolean(h.completions[todayKey])}
-                  onToggle={() => toggleToday(h.id)}
-                  onEdit={() => setSheet({ open: true, habit: h })}
-                />
-              ))}
-            </div>
+            <>
+              <div className="flex flex-col gap-3">
+                {list.map((h) => (
+                  <HabitCard
+                    key={h.id}
+                    habit={h}
+                    today={today}
+                    done={Boolean(h.completions[todayKey])}
+                    onToggle={() => toggleToday(h.id)}
+                    onEdit={() => setSheet({ open: true, habit: h })}
+                  />
+                ))}
+              </div>
+              <p className="mt-3 px-1 text-xs font-medium text-inksoft">
+                Zorluk puanı: {score.earned} / {score.total}
+              </p>
+            </>
           )}
         </section>
+
+        <SuggestionsCard existingNames={list.map((h) => h.name)} onAdd={addSuggestion} />
+
+        <ScheduleCard
+          items={scheduleItems}
+          today={today}
+          onToggle={(id) => toggleDone(id, today)}
+          onEdit={(item) => setPlanSheet({ open: true, item })}
+          onAdd={() => setPlanSheet({ open: true })}
+        />
+
+        <ReminderBanner permission={permission} onRequest={request} />
 
         <WeekCard habits={list} today={today} allDone={allDone} />
 
@@ -164,6 +234,19 @@ function Index() {
           onClose={() => setSheet({ open: false })}
           onSave={handleSave}
           onDelete={handleDelete}
+        />
+      )}
+
+      {planSheet.open && (
+        <ScheduleSheet
+          key={planSheet.item?.id ?? "new-plan"}
+          item={planSheet.item}
+          onClose={() => setPlanSheet({ open: false })}
+          onSave={handlePlanSave}
+          onDelete={(id) => {
+            removeItem(id);
+            setPlanSheet({ open: false });
+          }}
         />
       )}
     </div>
