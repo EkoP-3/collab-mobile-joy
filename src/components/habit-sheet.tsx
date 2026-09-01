@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
-import { ICON_OPTIONS, TIME_OPTIONS, type Habit } from "@/lib/habits";
+import {
+  DIFFICULTY_META,
+  DIFFICULTY_OPTIONS,
+  ICON_OPTIONS,
+  TIME_OPTIONS,
+  type Difficulty,
+  type Habit,
+} from "@/lib/habits";
 
-export type HabitDraft = { id?: string; name: string; icon: string; time: string };
+export type HabitDraft = { id?: string; name: string; icon: string; time: string; difficulty: Difficulty };
 
 type Props = {
   habit?: Habit | undefined;
@@ -11,15 +18,17 @@ type Props = {
 };
 
 export function HabitSheet({ habit, onClose, onSave, onDelete }: Props) {
-const [name, setName] = useState("");
+  const [name, setName] = useState("");
   const [icon, setIcon] = useState<string>(ICON_OPTIONS[0] ?? "💧");
   const [time, setTime] = useState<string>(TIME_OPTIONS[0] ?? "Sabah");
+  const [difficulty, setDifficulty] = useState<Difficulty>("orta");
   const [error, setError] = useState(false);
 
-useEffect(() => {
+  useEffect(() => {
     setName(habit?.name ?? "");
     setIcon(habit?.icon ?? ICON_OPTIONS[0] ?? "💧");
     setTime(habit?.time ?? TIME_OPTIONS[0] ?? "Sabah");
+    setDifficulty(habit?.difficulty ?? "orta");
     setError(false);
   }, [habit]);
 
@@ -36,7 +45,7 @@ useEffect(() => {
     };
   }, [onClose]);
 
-const submit = () => {
+  const submit = () => {
     const trimmed = name.trim();
     if (!trimmed) {
       setError(true);
@@ -44,8 +53,8 @@ const submit = () => {
     }
     onSave(
       habit
-        ? { id: habit.id, name: trimmed, icon, time }
-        : { name: trimmed, icon, time },
+        ? { id: habit.id, name: trimmed, icon, time, difficulty }
+        : { name: trimmed, icon, time, difficulty },
     );
   };
 
@@ -61,7 +70,7 @@ const submit = () => {
         role="dialog"
         aria-modal="true"
         aria-label={habit ? "Alışkanlığı düzenle" : "Yeni alışkanlık"}
-        className="relative z-10 animate-sheet-up rounded-t-[28px] border border-white/60 bg-white/70 p-6 shadow-2xl shadow-brand/10 backdrop-blur-2xl"
+        className="relative z-10 max-h-[88vh] animate-sheet-up overflow-y-auto rounded-t-[28px] border border-white/60 bg-white/70 p-6 shadow-2xl shadow-brand/10 backdrop-blur-2xl"
         style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
       >
         <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-ink/15" />
@@ -119,6 +128,33 @@ const submit = () => {
             </button>
           ))}
         </div>
+
+        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">
+          Senin için zorluğu
+        </p>
+        <div className="mt-2 flex gap-2">
+          {DIFFICULTY_OPTIONS.map((d) => (
+            <button
+              key={d}
+              type="button"
+              onClick={() => setDifficulty(d)}
+              aria-pressed={difficulty === d}
+              className={`flex-1 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-all ${
+                difficulty === d
+                  ? "bg-brand text-white shadow-md shadow-brand/30"
+                  : "bg-white/60 text-ink ring-1 ring-black/5"
+              }`}
+            >
+              <span className="block">{DIFFICULTY_META[d].label}</span>
+              <span className="mt-0.5 block text-[10px] font-medium opacity-80">
+                {"●".repeat(DIFFICULTY_META[d].dots)}
+              </span>
+            </button>
+          ))}
+        </div>
+        <p className="mt-1.5 text-[11px] font-medium text-inksoft">
+          Zor işaretlediğin alışkanlıklar günlük puanında daha fazla değer taşır.
+        </p>
 
         <div className="mt-6 flex items-center gap-3">
           {habit && (
