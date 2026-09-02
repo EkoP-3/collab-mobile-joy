@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      push_devices: {
+        Row: {
+          created_at: string
+          device_id: string
+          id: string
+          items: Json
+          last_ongoing: string | null
+          ongoing_enabled: boolean
+          sent_keys: string[]
+          token: string
+          tz_offset: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          id?: string
+          items?: Json
+          last_ongoing?: string | null
+          ongoing_enabled?: boolean
+          sent_keys?: string[]
+          token: string
+          tz_offset?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          id?: string
+          items?: Json
+          last_ongoing?: string | null
+          ongoing_enabled?: boolean
+          sent_keys?: string[]
+          token?: string
+          tz_offset?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
