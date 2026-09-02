@@ -221,7 +221,18 @@ function Index() {
           onAdd={() => setPlanSheet({ open: true })}
         />
 
-        <ReminderBanner permission={permission} onRequest={request} />
+        <PushCard
+          enabled={push.enabled}
+          ongoing={push.ongoing}
+          status={push.status}
+          busy={push.busy}
+          onEnable={() => void push.enable()}
+          onDisable={() => void push.turnOff()}
+          onToggleOngoing={push.toggleOngoing}
+          onTest={() => void push.sendTest()}
+        />
+
+        {!push.enabled && <ReminderBanner permission={permission} onRequest={request} />}
 
         <WeekCard habits={list} today={today} allDone={allDone} />
 
