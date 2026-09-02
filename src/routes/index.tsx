@@ -9,9 +9,11 @@ import { SuggestionsCard } from "@/components/suggestions-card";
 import { ScheduleCard } from "@/components/schedule-card";
 import { ScheduleSheet, type ScheduleDraft } from "@/components/schedule-sheet";
 import { ReminderBanner } from "@/components/reminder-banner";
+import { PushCard } from "@/components/push-card";
 import { useHabits } from "@/hooks/use-habits";
 import { useSchedule } from "@/hooks/use-schedule";
 import { useReminders } from "@/hooks/use-reminders";
+import { usePush } from "@/hooks/use-push";
 import {
   bestStreak,
   currentStreak,
@@ -50,6 +52,7 @@ function Index() {
   const { items, upsert: upsertItem, remove: removeItem, toggleDone } = useSchedule();
   const scheduleItems = items ?? [];
   const { permission, request } = useReminders(scheduleItems);
+  const push = usePush(scheduleItems);
   const [sheet, setSheet] = useState<{ open: boolean; habit?: Habit }>({ open: false });
   const [planSheet, setPlanSheet] = useState<{ open: boolean; item?: ScheduleItem }>({ open: false });
 
@@ -218,7 +221,18 @@ function Index() {
           onAdd={() => setPlanSheet({ open: true })}
         />
 
-        <ReminderBanner permission={permission} onRequest={request} />
+        <PushCard
+          enabled={push.enabled}
+          ongoing={push.ongoing}
+          status={push.status}
+          busy={push.busy}
+          onEnable={() => void push.enable()}
+          onDisable={() => void push.turnOff()}
+          onToggleOngoing={push.toggleOngoing}
+          onTest={() => void push.sendTest()}
+        />
+
+        {!push.enabled && <ReminderBanner permission={permission} onRequest={request} />}
 
         <WeekCard habits={list} today={today} allDone={allDone} />
 
