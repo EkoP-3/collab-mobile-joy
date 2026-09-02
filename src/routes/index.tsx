@@ -9,9 +9,11 @@ import { SuggestionsCard } from "@/components/suggestions-card";
 import { ScheduleCard } from "@/components/schedule-card";
 import { ScheduleSheet, type ScheduleDraft } from "@/components/schedule-sheet";
 import { ReminderBanner } from "@/components/reminder-banner";
+import { PushCard } from "@/components/push-card";
 import { useHabits } from "@/hooks/use-habits";
 import { useSchedule } from "@/hooks/use-schedule";
 import { useReminders } from "@/hooks/use-reminders";
+import { usePush } from "@/hooks/use-push";
 import {
   bestStreak,
   currentStreak,
