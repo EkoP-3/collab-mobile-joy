@@ -52,6 +52,7 @@ function Index() {
   const { items, upsert: upsertItem, remove: removeItem, toggleDone } = useSchedule();
   const scheduleItems = items ?? [];
   const { permission, request } = useReminders(scheduleItems);
+  const push = usePush(scheduleItems);
   const [sheet, setSheet] = useState<{ open: boolean; habit?: Habit }>({ open: false });
   const [planSheet, setPlanSheet] = useState<{ open: boolean; item?: ScheduleItem }>({ open: false });
 
