@@ -119,8 +119,8 @@ export const Route = createFileRoute("/api/public/hooks/push-tick")({
             continue;
           }
 
-          const update: Record<string, unknown> = {};
-          if (newKeys.length > 0) update["sent_keys"] = [...todaysKeys, ...newKeys];
+          const update: { sent_keys?: string[]; last_ongoing?: string } = {};
+          if (newKeys.length > 0) update.sent_keys = [...todaysKeys, ...newKeys];
 
           if (device.ongoing_enabled) {
             const text = ongoingText(items, minutes);
@@ -128,7 +128,7 @@ export const Route = createFileRoute("/api/public/hooks/push-tick")({
             if (text && signature !== device.last_ongoing) {
               const result = await sendPush(device.token, { kind: "ongoing", ...text });
               if (result.ok) {
-                update["last_ongoing"] = signature;
+                update.last_ongoing = signature;
                 ongoing++;
               } else if (result.stale) {
                 await supabaseAdmin
