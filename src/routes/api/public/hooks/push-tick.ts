@@ -124,7 +124,7 @@ export const Route = createFileRoute("/api/public/hooks/push-tick")({
 
           if (device.ongoing_enabled) {
             const text = ongoingText(items, minutes);
-            const signature = text ? `${text.title}|${text.body}` : null;
+            const signature = text ? `${text.title}|${text.body}` : "";
             if (text && signature !== device.last_ongoing) {
               const result = await sendPush(device.token, { kind: "ongoing", ...text });
               if (result.ok) {
