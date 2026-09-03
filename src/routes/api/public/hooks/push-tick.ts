@@ -68,7 +68,7 @@ export const Route = createFileRoute("/api/public/hooks/push-tick")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const secret = process.env["PUSH_CRON_SECRET"];
+        const secret = process.env["PUSH_TICK_TOKEN"];
         if (!secret || request.headers.get("x-cron-secret") !== secret) {
           return new Response("Unauthorized", { status: 401 });
         }
