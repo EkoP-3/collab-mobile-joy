@@ -68,7 +68,7 @@ export const Route = createFileRoute("/api/public/hooks/push-tick")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const secret = process.env["PUSH_CRON_SECRET"];
+        const secret = process.env["PUSH_TICK_TOKEN"];
         if (!secret || request.headers.get("x-cron-secret") !== secret) {
           return new Response("Unauthorized", { status: 401 });
         }
@@ -119,16 +119,16 @@ export const Route = createFileRoute("/api/public/hooks/push-tick")({
             continue;
           }
 
-          const update: Record<string, unknown> = {};
-          if (newKeys.length > 0) update["sent_keys"] = [...todaysKeys, ...newKeys];
+          const update: { sent_keys?: string[]; last_ongoing?: string } = {};
+          if (newKeys.length > 0) update.sent_keys = [...todaysKeys, ...newKeys];
 
           if (device.ongoing_enabled) {
             const text = ongoingText(items, minutes);
-            const signature = text ? `${text.title}|${text.body}` : null;
+            const signature = text ? `${text.title}|${text.body}` : "";
             if (text && signature !== device.last_ongoing) {
               const result = await sendPush(device.token, { kind: "ongoing", ...text });
               if (result.ok) {
-                update["last_ongoing"] = signature;
+                update.last_ongoing = signature;
                 ongoing++;
               } else if (result.stale) {
                 await supabaseAdmin

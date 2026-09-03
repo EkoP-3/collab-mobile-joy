@@ -237,7 +237,8 @@ function Index() {
         <WeekCard habits={list} today={today} allDone={allDone} />
 
         <p className="pb-2 text-center text-xs font-medium text-inksoft/70">
-          Tüm veriler bu cihazda kalır · Hesap yok · Bulut yok
+          Alışkanlıkların bu cihazda kalır · Hesap yok · Bildirim açıksa yalnızca program saatlerin
+          gönderilir
         </p>
       </main>
 
