@@ -1,4 +1,5 @@
-import { dateKey, startOfWeek, type MoodMap } from "@/lib/habits-mood-shim";
+import { dateKey, startOfWeek } from "@/lib/habits";
+import type { MoodMap } from "@/hooks/use-moods";
 
 const EMOJIS = ["😞", "😕", "😐", "🙂", "😄"];
 const LABELS = ["Zor", "Durgun", "İdare eder", "İyi", "Harika"];
