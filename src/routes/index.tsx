@@ -14,6 +14,8 @@ import { useHabits } from "@/hooks/use-habits";
 import { useSchedule } from "@/hooks/use-schedule";
 import { useReminders } from "@/hooks/use-reminders";
 import { usePush } from "@/hooks/use-push";
+import { useMoods } from "@/hooks/use-moods";
+import { MoodCard } from "@/components/mood-card";
 import {
   bestStreak,
   currentStreak,
@@ -47,12 +49,23 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+function Cloud({ className }: { className?: string }) {
+  return (
+    <div className={`relative h-24 w-56 ${className ?? ""}`}>
+      <div className="absolute top-6 left-0 h-16 w-40 rounded-full bg-white/80 blur-md" />
+      <div className="absolute top-0 left-12 h-20 w-24 rounded-full bg-white/90 blur-md" />
+      <div className="absolute top-8 left-24 h-14 w-28 rounded-full bg-white/70 blur-md" />
+    </div>
+  );
+}
+
 function Index() {
   const { habits, today, toggleToday, upsert, remove } = useHabits();
   const { items, upsert: upsertItem, remove: removeItem, toggleDone } = useSchedule();
   const scheduleItems = items ?? [];
   const { permission, request } = useReminders(scheduleItems);
   const push = usePush(scheduleItems);
+  const { moods, setMood } = useMoods(today ?? new Date());
   const [sheet, setSheet] = useState<{ open: boolean; habit?: Habit }>({ open: false });
   const [planSheet, setPlanSheet] = useState<{ open: boolean; item?: ScheduleItem }>({ open: false });
 
@@ -136,14 +149,30 @@ function Index() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-linear-to-br from-ice via-mist to-brand/30 font-sans text-ink">
-      <div className="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-accent-bright/40 blur-3xl" />
-      <div className="pointer-events-none absolute top-1/3 -right-24 size-80 rounded-full bg-brand/30 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 left-1/4 size-96 rounded-full bg-white/50 blur-3xl" />
+    <div className="relative min-h-screen w-full overflow-hidden bg-linear-to-b from-accent-bright/50 via-ice to-mist font-sans text-ink">
+      {/* Renkli ışıklar */}
+      <div className="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-accent-bright/50 blur-3xl" />
+      <div className="pointer-events-none absolute top-1/3 -right-24 size-80 rounded-full bg-brand/40 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 left-1/4 size-96 rounded-full bg-sun/40 blur-3xl" />
+
+      {/* Süzülen bulutlar */}
+      <div className="animate-cloud-slow pointer-events-none absolute top-10 -left-16">
+        <Cloud className="scale-110 opacity-90" />
+      </div>
+      <div className="animate-cloud-fast pointer-events-none absolute top-56 -right-20">
+        <Cloud className="scale-75 opacity-70" />
+      </div>
+      <div className="animate-cloud-slow pointer-events-none absolute top-[55%] -left-24">
+        <Cloud className="scale-90 opacity-60" />
+      </div>
+      <div className="animate-cloud-fast pointer-events-none absolute bottom-40 -right-16">
+        <Cloud className="scale-125 opacity-75" />
+      </div>
 
       <main className="relative mx-auto flex min-h-screen w-full max-w-md flex-col gap-5 px-5 py-8">
         <AppHeader today={today} bestCurrentStreak={current} />
         <StreakCard habits={list} today={today} current={current} best={best} />
+        <MoodCard moods={moods} today={today} onPick={setMood} />
 
         <section>
           <div className="mb-3 flex items-center justify-between px-1">

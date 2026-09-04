@@ -57,6 +57,7 @@
   --color-mist: var(--mist);
   --color-brand: var(--brand);
   --color-accent-bright: var(--accent-bright);
+  --color-sun: var(--sun);
   --color-ink: var(--ink);
   --color-inksoft: var(--inksoft);
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -97,13 +98,14 @@
   --sidebar-accent-foreground: var(--ink);
   --sidebar-border: oklch(1 0 0 / 0.6);
   --sidebar-ring: var(--brand);
-  /* Momentum palette */
-  --ice: oklch(0.9363 0.0138 248.0);
-  --mist: oklch(0.8284 0.0274 246.4);
-  --brand: oklch(0.6304 0.1978 269.1);
-  --accent-bright: oklch(0.7971 0.1339 211.5);
-  --ink: oklch(0.2568 0.0473 261.2);
-  --inksoft: oklch(0.5226 0.0419 256.0);
+  /* Momentum palette — vivid sky */
+  --ice: oklch(0.94 0.035 235);
+  --mist: oklch(0.85 0.07 230);
+  --brand: oklch(0.585 0.24 268);
+  --accent-bright: oklch(0.76 0.17 200);
+  --sun: oklch(0.85 0.16 95);
+  --ink: oklch(0.24 0.055 262);
+  --inksoft: oklch(0.50 0.05 256);
 }
 
 .dark {
@@ -153,6 +155,23 @@
 }
 
 /* Motion */
+@utility animate-cloud-slow {
+  animation: cloud-drift 32s ease-in-out infinite alternate;
+}
+
+@utility animate-cloud-fast {
+  animation: cloud-drift 22s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes cloud-drift {
+  from {
+    transform: translateX(-7%);
+  }
+  to {
+    transform: translateX(7%);
+  }
+}
+
 @utility animate-sheet-up {
   animation: sheet-up 0.38s cubic-bezier(0.32, 0.72, 0, 1) both;
 }
