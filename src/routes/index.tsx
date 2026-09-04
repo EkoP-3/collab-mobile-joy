@@ -14,6 +14,8 @@ import { useHabits } from "@/hooks/use-habits";
 import { useSchedule } from "@/hooks/use-schedule";
 import { useReminders } from "@/hooks/use-reminders";
 import { usePush } from "@/hooks/use-push";
+import { useMoods } from "@/hooks/use-moods";
+import { MoodCard } from "@/components/mood-card";
 import {
   bestStreak,
   currentStreak,
@@ -170,6 +172,7 @@ function Index() {
       <main className="relative mx-auto flex min-h-screen w-full max-w-md flex-col gap-5 px-5 py-8">
         <AppHeader today={today} bestCurrentStreak={current} />
         <StreakCard habits={list} today={today} current={current} best={best} />
+        <MoodCard moods={moods} today={today} onPick={setMood} />
 
         <section>
           <div className="mb-3 flex items-center justify-between px-1">
