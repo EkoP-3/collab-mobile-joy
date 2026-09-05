@@ -15,10 +15,13 @@ messaging.onBackgroundMessage((payload) => {
     tag: isOngoing ? "momentum-ongoing" : data.tag || "momentum",
     renotify: !isOngoing,
     silent: isOngoing,
+    vibrate: isOngoing ? [] : [80, 40, 80],
     requireInteraction: isOngoing,
-    data: { url: "/" },
+    timestamp: Date.now(),
+    data: { url: "/", kind: data.kind || "alert" },
   });
 });
+
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
