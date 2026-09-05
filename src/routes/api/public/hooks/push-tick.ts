@@ -50,7 +50,9 @@ function ongoingText(items: Item[], minutes: number): { title: string; body: str
     }
   }
   const next = sorted.find((i) => toMinutes(i.start) > minutes);
-  const clock = `${pad(Math.floor(minutes / 60))}:${pad(minutes % 60)}`;
+  // Saati 15 dakikaya yuvarla: bildirim sık sık yenilenmesin, sabit kalsın.
+  const rounded = Math.floor(minutes / 15) * 15;
+  const clock = `${pad(Math.floor(rounded / 60))}:${pad(rounded % 60)}`;
 
   if (current) {
     return {
@@ -62,6 +64,7 @@ function ongoingText(items: Item[], minutes: number): { title: string; body: str
     return { title: `${clock} · Serbest zaman`, body: `Sırada ${next.start} · ${next.title}` };
   }
   return { title: `${clock} · Program tamam`, body: "Bugünlük planın bitti" };
+
 }
 
 export const Route = createFileRoute("/api/public/hooks/push-tick")({
