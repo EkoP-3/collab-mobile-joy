@@ -6,7 +6,14 @@ import {
   sendTestPush,
   syncPushSchedule,
 } from "@/lib/push.functions";
-import { getDeviceId, requestPushToken, tzOffsetMinutes, type PushStatus } from "@/lib/push";
+import {
+  getDeviceId,
+  hideOngoingNotification,
+  requestPushToken,
+  resetOngoingNotification,
+  tzOffsetMinutes,
+  type PushStatus,
+} from "@/lib/push";
 import type { ScheduleItem } from "@/lib/schedule";
 
 const ENABLED_KEY = "momentum-push-enabled";
@@ -73,6 +80,7 @@ export function usePush(items: ScheduleItem[]) {
       });
       localStorage.setItem(ENABLED_KEY, "1");
       setEnabled(true);
+      void resetOngoingNotification().catch(() => undefined);
     } catch {
       setStatus("denied");
     } finally {
@@ -87,6 +95,7 @@ export function usePush(items: ScheduleItem[]) {
       localStorage.setItem(ENABLED_KEY, "0");
       setEnabled(false);
       setStatus("idle");
+      void hideOngoingNotification().catch(() => undefined);
     } finally {
       setBusy(false);
     }
@@ -96,6 +105,7 @@ export function usePush(items: ScheduleItem[]) {
     setOngoing((v) => {
       const next = !v;
       localStorage.setItem(ONGOING_KEY, next ? "1" : "0");
+      void (next ? resetOngoingNotification() : hideOngoingNotification()).catch(() => undefined);
       return next;
     });
   }, []);

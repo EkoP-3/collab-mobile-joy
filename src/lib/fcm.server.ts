@@ -37,7 +37,9 @@ export async function sendPush(token: string, payload: PushPayload): Promise<Sen
         token,
         data,
         webpush: {
-          headers: { Urgency: payload.kind === "ongoing" ? "normal" : "high", TTL: "600" },
+          // "high": telefon uyku modundayken bile bildirim gecikmeden işlenir.
+          // Kısa TTL: eski "şu an" bildirimleri birikip sonradan art arda gelmesin.
+          headers: { Urgency: "high", TTL: payload.kind === "ongoing" ? "240" : "600" },
         },
       },
     }),
