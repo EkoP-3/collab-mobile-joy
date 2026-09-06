@@ -10,6 +10,7 @@ import {
   getDeviceId,
   hideOngoingNotification,
   requestPushToken,
+  resetOngoingNotification,
   tzOffsetMinutes,
   type PushStatus,
 } from "@/lib/push";
@@ -79,6 +80,7 @@ export function usePush(items: ScheduleItem[]) {
       });
       localStorage.setItem(ENABLED_KEY, "1");
       setEnabled(true);
+      void resetOngoingNotification().catch(() => undefined);
     } catch {
       setStatus("denied");
     } finally {
@@ -103,7 +105,7 @@ export function usePush(items: ScheduleItem[]) {
     setOngoing((v) => {
       const next = !v;
       localStorage.setItem(ONGOING_KEY, next ? "1" : "0");
-      if (!next) void hideOngoingNotification().catch(() => undefined);
+      void (next ? resetOngoingNotification() : hideOngoingNotification()).catch(() => undefined);
       return next;
     });
   }, []);

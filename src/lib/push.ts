@@ -98,9 +98,14 @@ export async function requestPushToken(): Promise<
   return token ? { status: "registered", token } : { status: "denied" };
 }
 
-/** Telefondaki sabit "şu an" bildirimini kapat (kullanıcı özelliği kapattığında). */
-export async function hideOngoingNotification(): Promise<void> {
+async function postToWorker(type: "hide-ongoing" | "reset-ongoing"): Promise<void> {
   if (!("serviceWorker" in navigator)) return;
   const reg = await navigator.serviceWorker.getRegistration("/firebase-messaging-sw.js");
-  reg?.active?.postMessage({ type: "hide-ongoing" });
+  reg?.active?.postMessage({ type });
 }
+
+/** Telefondaki sabit "şu an" bildirimini kapat (kullanıcı özelliği kapattığında). */
+export const hideOngoingNotification = () => postToWorker("hide-ongoing");
+
+/** Özellik yeniden açıldığında gizleme kaydını temizle; ilk güncellemede bildirim geri gelir. */
+export const resetOngoingNotification = () => postToWorker("reset-ongoing");

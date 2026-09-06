@@ -37,6 +37,16 @@ async function setHidden(signature) {
   }
 }
 
+function todayKey() {
+  const d = new Date();
+  return `day:${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+}
+
+/** "*" = uygulama kapattı, "day:..." = kullanıcı bugünlük gizledi. */
+function isHidden(hidden) {
+  return hidden === "*" || hidden === todayKey();
+}
+
 function parsePayload(event) {
   if (!event.data) return {};
   try {
@@ -90,10 +100,8 @@ self.addEventListener("push", (event) => {
     (async () => {
       if (!isOngoing) return showAlert(data);
 
-      const signature = `${data.title || "Momentum"}|${data.body || ""}`;
       const hidden = await getHidden();
-      // Yeni içerik geldiyse gizleme kalkar; aynı içerik gizlenmişse tekrar gösterme.
-      if (hidden && hidden === signature) return;
+      if (isHidden(hidden)) return;
       if (hidden) await setHidden("");
       return showOngoing(data);
     })(),
@@ -105,7 +113,7 @@ self.addEventListener("notificationclick", (event) => {
   const isOngoing = n.data && n.data.kind === "ongoing";
 
   if (event.action === "hide" && isOngoing) {
-    event.waitUntil(setHidden(n.data.signature || "").then(() => n.close()));
+    event.waitUntil(setHidden(todayKey()).then(() => n.close()));
     return;
   }
 
@@ -129,7 +137,7 @@ self.addEventListener("notificationclose", (event) => {
   event.waitUntil(
     (async () => {
       const hidden = await getHidden();
-      if (hidden && hidden === n.data.signature) return;
+      if (isHidden(hidden)) return;
       await showOngoing({ title: n.data.title, body: n.data.body });
     })(),
   );
@@ -137,13 +145,16 @@ self.addEventListener("notificationclose", (event) => {
 
 /* Uygulama "kalıcı bildirimi kapat" dediğinde: gizle ve temizle. */
 self.addEventListener("message", (event) => {
-  if (!event.data || event.data.type !== "hide-ongoing") return;
-  event.waitUntil(
-    (async () => {
-      const list = await self.registration.getNotifications({ tag: ONGOING_TAG });
-      const sig = list[0] && list[0].data ? list[0].data.signature || "" : "";
-      await setHidden(sig || "*");
-      for (const n of list) n.close();
-    })(),
-  );
+  const type = event.data && event.data.type;
+  if (type === "hide-ongoing") {
+    event.waitUntil(
+      (async () => {
+        await setHidden("*");
+        const list = await self.registration.getNotifications({ tag: ONGOING_TAG });
+        for (const n of list) n.close();
+      })(),
+    );
+  } else if (type === "reset-ongoing") {
+    event.waitUntil(setHidden(""));
+  }
 });
