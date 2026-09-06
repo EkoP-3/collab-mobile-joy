@@ -174,6 +174,25 @@ function Index() {
         <StreakCard habits={list} today={today} current={current} best={best} />
         <MoodCard moods={moods} today={today} onPick={setMood} />
 
+        <Link
+          to="/kayit"
+          className="glass flex items-center justify-between rounded-3xl border border-white/60 px-5 py-4 shadow-md shadow-brand/10 transition-transform active:scale-[0.98]"
+        >
+          <span className="flex items-center gap-3">
+            <span className="text-xl">🗓️</span>
+            <span>
+              <span className="block font-display text-base font-semibold text-ink">
+                Kayıt defteri
+              </span>
+              <span className="block text-xs font-medium text-inksoft">
+                Geçmiş günlerini gör, not bırak
+              </span>
+            </span>
+          </span>
+          <span className="text-brand">→</span>
+        </Link>
+
+
         <section>
           <div className="mb-3 flex items-center justify-between px-1">
             <h2 className="font-display text-lg font-semibold tracking-tight text-ink">
