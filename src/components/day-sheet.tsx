@@ -13,8 +13,8 @@ type Props = {
   items: ScheduleItem[];
   mood: number | undefined;
   note: string;
-  onMood?: (mood: number) => void;
-  onToggleHabit?: (id: string) => void;
+  onMood?: ((mood: number) => void) | undefined;
+  onToggleHabit?: ((id: string) => void) | undefined;
   onSaveNote: (text: string) => void;
   onClose: () => void;
 };
