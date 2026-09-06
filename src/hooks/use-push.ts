@@ -6,7 +6,13 @@ import {
   sendTestPush,
   syncPushSchedule,
 } from "@/lib/push.functions";
-import { getDeviceId, requestPushToken, tzOffsetMinutes, type PushStatus } from "@/lib/push";
+import {
+  getDeviceId,
+  hideOngoingNotification,
+  requestPushToken,
+  tzOffsetMinutes,
+  type PushStatus,
+} from "@/lib/push";
 import type { ScheduleItem } from "@/lib/schedule";
 
 const ENABLED_KEY = "momentum-push-enabled";

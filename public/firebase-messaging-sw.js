@@ -134,3 +134,16 @@ self.addEventListener("notificationclose", (event) => {
     })(),
   );
 });
+
+/* Uygulama "kalıcı bildirimi kapat" dediğinde: gizle ve temizle. */
+self.addEventListener("message", (event) => {
+  if (!event.data || event.data.type !== "hide-ongoing") return;
+  event.waitUntil(
+    (async () => {
+      const list = await self.registration.getNotifications({ tag: ONGOING_TAG });
+      const sig = list[0] && list[0].data ? list[0].data.signature || "" : "";
+      await setHidden(sig || "*");
+      for (const n of list) n.close();
+    })(),
+  );
+});
