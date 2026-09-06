@@ -79,6 +79,9 @@ export async function requestPushToken(): Promise<
   const registration = await navigator.serviceWorker.register(
     `/firebase-messaging-sw.js?${query}`,
   );
+  // Yeni sürüm varsa hemen yüklensin; eski bildirim davranışı takılı kalmasın.
+  await registration.update().catch(() => undefined);
+  await navigator.serviceWorker.ready;
   const { initializeApp, getApps, getApp } = await import("firebase/app");
   const app = getApps().length
     ? getApp()

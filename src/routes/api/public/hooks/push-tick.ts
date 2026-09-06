@@ -50,8 +50,8 @@ function ongoingText(items: Item[], minutes: number): { title: string; body: str
     }
   }
   const next = sorted.find((i) => toMinutes(i.start) > minutes);
-  // Saati 15 dakikaya yuvarla: bildirim sık sık yenilenmesin, sabit kalsın.
-  const rounded = Math.floor(minutes / 15) * 15;
+  // Saati 5 dakikaya yuvarla: bildirim yerinde sessizce güncellenir, yığılmaz.
+  const rounded = Math.floor(minutes / 5) * 5;
   const clock = `${pad(Math.floor(rounded / 60))}:${pad(rounded % 60)}`;
 
   if (current) {
