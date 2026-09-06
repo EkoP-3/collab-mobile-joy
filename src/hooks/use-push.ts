@@ -93,6 +93,7 @@ export function usePush(items: ScheduleItem[]) {
       localStorage.setItem(ENABLED_KEY, "0");
       setEnabled(false);
       setStatus("idle");
+      void hideOngoingNotification().catch(() => undefined);
     } finally {
       setBusy(false);
     }
@@ -102,6 +103,7 @@ export function usePush(items: ScheduleItem[]) {
     setOngoing((v) => {
       const next = !v;
       localStorage.setItem(ONGOING_KEY, next ? "1" : "0");
+      if (!next) void hideOngoingNotification().catch(() => undefined);
       return next;
     });
   }, []);
