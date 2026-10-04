@@ -13,6 +13,9 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: write # APK'yı Releases sayfasına koyabilmek için
+
 concurrency:
   group: android-${{ github.ref }}
   cancel-in-progress: true
@@ -64,6 +67,19 @@ jobs:
           name: momentum-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      - name: APK'yı Releases sayfasına koy (debug-latest)
+        if: ${{ github.event_name != 'pull_request' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk momentum-debug.apk
+          gh release delete debug-latest --cleanup-tag --yes || true
+          gh release create debug-latest momentum-debug.apk \
+            --prerelease \
+            --title "Momentum debug APK" \
+            --notes "Son derleme: ${GITHUB_SHA::7}. APK'yı indirip telefona kur; eskisinin üstüne güncelleme olarak kurulur." \
+            --target "$GITHUB_SHA"
 
       - name: Release için anahtar deposunu hazırla
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.release }}

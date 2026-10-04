@@ -25,7 +25,7 @@ bun run lint
 ### Android Studio olmadan: GitHub Actions ile APK
 
 1. Bu depoya bir şey push et (ya da **Actions → Android → Run workflow**).
-2. İş bitince çalıştırmanın sayfasında **Artifacts → momentum-debug-apk** dosyasını indir.
+2. İş bitince (yaklaşık 3 dk) **Releases → "Momentum debug APK" (debug-latest)** sayfasından `momentum-debug.apk` dosyasını indir: https://github.com/EkoP-3/collab-mobile-joy/releases/tag/debug-latest (yedek yol: çalıştırma sayfasında Artifacts, yalnızca tarayıcının masaüstü görünümünde çıkar).
 3. APK'yı telefona gönder, kurulumda "bilinmeyen kaynaklara izin ver" de. Bildirimleri uygulama içinden aç.
 
 **Güncelleme:** Kodda değişiklik yapılınca GitHub yeni bir APK üretir. Yeni APK'yı indirip eskisinin **üstüne** kurman yeter; veriler korunur (debug APK'lar sabit bir imzayla çıkar). Play Store'a çıktıktan sonra güncellemeler telefonlara otomatik gelir.
