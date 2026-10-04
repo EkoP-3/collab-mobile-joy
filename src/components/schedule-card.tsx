@@ -18,7 +18,9 @@ export function ScheduleCard({ items, today, onToggle, onEdit, onAdd }: Props) {
   return (
     <section className="glass rounded-3xl border border-white/60 p-5 shadow-md shadow-brand/10">
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-lg font-semibold tracking-tight text-ink">Günlük program</h2>
+        <h2 className="font-display text-lg font-semibold tracking-tight text-ink">
+          Günlük program
+        </h2>
         <div className="flex items-center gap-2.5">
           {sorted.length > 0 && (
             <span className="text-sm font-semibold text-inksoft">
@@ -54,7 +56,9 @@ export function ScheduleCard({ items, today, onToggle, onEdit, onAdd }: Props) {
                   >
                     {item.start}
                   </span>
-                  {item.end && <span className="text-[10px] font-medium text-inksoft/70">{item.end}</span>}
+                  {item.end && (
+                    <span className="text-[10px] font-medium text-inksoft/70">{item.end}</span>
+                  )}
                 </div>
 
                 <div className="flex flex-col items-center">
@@ -72,7 +76,15 @@ export function ScheduleCard({ items, today, onToggle, onEdit, onAdd }: Props) {
                     }`}
                   >
                     {isDone && (
-                      <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3.5} strokeLinecap="round" strokeLinejoin="round">
+                      <svg
+                        className="size-3"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={3.5}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
                         <path d="M5 13l4 4L19 7" />
                       </svg>
                     )}

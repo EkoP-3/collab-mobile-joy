@@ -8,7 +8,13 @@ import {
   type Habit,
 } from "@/lib/habits";
 
-export type HabitDraft = { id?: string; name: string; icon: string; time: string; difficulty: Difficulty };
+export type HabitDraft = {
+  id?: string;
+  name: string;
+  icon: string;
+  time: string;
+  difficulty: Difficulty;
+};
 
 type Props = {
   habit?: Habit | undefined;
@@ -78,7 +84,9 @@ export function HabitSheet({ habit, onClose, onSave, onDelete }: Props) {
           {habit ? "Alışkanlığı düzenle" : "Yeni alışkanlık"}
         </h2>
 
-        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">İkon</p>
+        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">
+          İkon
+        </p>
         <div className="mt-2 grid grid-cols-6 gap-2">
           {ICON_OPTIONS.map((e) => (
             <button
@@ -87,7 +95,9 @@ export function HabitSheet({ habit, onClose, onSave, onDelete }: Props) {
               onClick={() => setIcon(e)}
               aria-label={`İkon ${e}`}
               className={`grid h-11 place-items-center rounded-xl text-xl transition-all ${
-                icon === e ? "bg-brand/15 ring-2 ring-brand" : "bg-white/60 ring-1 ring-black/5 hover:ring-black/10"
+                icon === e
+                  ? "bg-brand/15 ring-2 ring-brand"
+                  : "bg-white/60 ring-1 ring-black/5 hover:ring-black/10"
               }`}
             >
               {e}
@@ -95,7 +105,9 @@ export function HabitSheet({ habit, onClose, onSave, onDelete }: Props) {
           ))}
         </div>
 
-        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">Ad</p>
+        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">
+          Ad
+        </p>
         <input
           value={name}
           onChange={(e) => {
@@ -111,9 +123,13 @@ export function HabitSheet({ habit, onClose, onSave, onDelete }: Props) {
               : "border-white/60 focus:border-brand/50 focus:ring-brand/40"
           }`}
         />
-        {error && <p className="mt-1.5 text-xs font-medium text-destructive">Bir isim yazmalısın.</p>}
+        {error && (
+          <p className="mt-1.5 text-xs font-medium text-destructive">Bir isim yazmalısın.</p>
+        )}
 
-        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">Zaman</p>
+        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">
+          Zaman
+        </p>
         <div className="mt-2 flex gap-2">
           {TIME_OPTIONS.map((t) => (
             <button
@@ -121,7 +137,9 @@ export function HabitSheet({ habit, onClose, onSave, onDelete }: Props) {
               type="button"
               onClick={() => setTime(t)}
               className={`flex-1 rounded-full px-3 py-2.5 text-sm font-semibold transition-all ${
-                time === t ? "bg-brand text-white shadow-md shadow-brand/30" : "bg-white/60 text-ink ring-1 ring-black/5"
+                time === t
+                  ? "bg-brand text-white shadow-md shadow-brand/30"
+                  : "bg-white/60 text-ink ring-1 ring-black/5"
               }`}
             >
               {t}

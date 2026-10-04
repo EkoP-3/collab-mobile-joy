@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { isValidTime, type ScheduleItem } from "@/lib/schedule";
 
-export type ScheduleDraft = { id?: string; start: string; end?: string; title: string; remind: boolean };
+export type ScheduleDraft = {
+  id?: string;
+  start: string;
+  end?: string;
+  title: string;
+  remind: boolean;
+};
 
 type Props = {
   item?: ScheduleItem | undefined;
@@ -74,7 +80,9 @@ export function ScheduleSheet({ item, onClose, onSave, onDelete }: Props) {
           {item ? "Programı düzenle" : "Programa ekle"}
         </h2>
 
-        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">Görev</p>
+        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">
+          Görev
+        </p>
         <input
           value={title}
           onChange={(e) => {
@@ -89,7 +97,9 @@ export function ScheduleSheet({ item, onClose, onSave, onDelete }: Props) {
 
         <div className="mt-5 flex gap-3">
           <div className="flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">Başlangıç</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">
+              Başlangıç
+            </p>
             <input
               type="time"
               value={start}
@@ -101,7 +111,9 @@ export function ScheduleSheet({ item, onClose, onSave, onDelete }: Props) {
             />
           </div>
           <div className="flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">Bitiş (ops.)</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">
+              Bitiş (ops.)
+            </p>
             <input
               type="time"
               value={end}

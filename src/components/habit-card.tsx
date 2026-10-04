@@ -54,7 +54,9 @@ export function HabitCard({ habit, today, done, onToggle, onEdit }: Props) {
       </div>
       <button
         type="button"
-        aria-label={done ? `${habit.name} — tamamlanmadı olarak işaretle` : `${habit.name} — tamamla`}
+        aria-label={
+          done ? `${habit.name} — tamamlanmadı olarak işaretle` : `${habit.name} — tamamla`
+        }
         aria-pressed={done}
         onClick={(e) => {
           e.stopPropagation();

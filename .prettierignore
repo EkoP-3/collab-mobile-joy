@@ -11,3 +11,4 @@ assets
 store
 .vercel
 capacitor-cordova-android-plugins
+.claude

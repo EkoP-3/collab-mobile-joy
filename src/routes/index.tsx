@@ -68,7 +68,9 @@ function Index() {
   const { permission, request } = useReminders(notify.native ? [] : scheduleItems);
   const { moods, setMood } = useMoods(today ?? new Date());
   const [sheet, setSheet] = useState<{ open: boolean; habit?: Habit }>({ open: false });
-  const [planSheet, setPlanSheet] = useState<{ open: boolean; item?: ScheduleItem }>({ open: false });
+  const [planSheet, setPlanSheet] = useState<{ open: boolean; item?: ScheduleItem }>({
+    open: false,
+  });
 
   // `today` is set client-side only (local date), so the first render shows a skeleton.
   if (!today) {
@@ -193,7 +195,6 @@ function Index() {
           <span className="text-brand">→</span>
         </Link>
 
-
         <section>
           <div className="mb-3 flex items-center justify-between px-1">
             <h2 className="font-display text-lg font-semibold tracking-tight text-ink">
@@ -227,7 +228,9 @@ function Index() {
           ) : list.length === 0 ? (
             <div className="glass rounded-2xl border border-white/60 p-6 text-center shadow-md shadow-brand/10">
               <p className="text-3xl">🌱</p>
-              <p className="mt-2 font-display text-base font-semibold text-ink">Henüz alışkanlık yok</p>
+              <p className="mt-2 font-display text-base font-semibold text-ink">
+                Henüz alışkanlık yok
+              </p>
               <p className="mt-1 text-sm font-medium text-inksoft">
                 İlk alışkanlığını ekleyerek seriye başla.
               </p>

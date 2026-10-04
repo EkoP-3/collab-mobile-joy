@@ -4,12 +4,7 @@
  */
 
 export type PushStatus =
-  | "idle"
-  | "not-configured"
-  | "unsupported"
-  | "open-in-new-tab"
-  | "denied"
-  | "registered";
+  "idle" | "not-configured" | "unsupported" | "open-in-new-tab" | "denied" | "registered";
 
 const DEVICE_KEY = "momentum-device-id";
 
@@ -23,19 +18,15 @@ export function getDeviceId(): string {
 }
 
 const appId = import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_APP_ID"] as
-  | string
-  | undefined;
+  string | undefined;
 const vapidKey = import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_VAPID_KEY"] as
-  | string
-  | undefined;
+  string | undefined;
 
 const firebaseConfig = {
   apiKey: import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_WEB_API_KEY"] as
-    | string
-    | undefined,
+    string | undefined,
   projectId: import.meta.env["VITE_LOVABLE_CONNECTOR_FIREBASE_MESSAGING_PROJECT_ID"] as
-    | string
-    | undefined,
+    string | undefined,
   appId,
   messagingSenderId: appId?.split(":")[1] ?? "",
 };
@@ -76,9 +67,7 @@ export async function requestPushToken(): Promise<
     messagingSenderId: firebaseConfig.messagingSenderId,
   }).toString();
 
-  const registration = await navigator.serviceWorker.register(
-    `/firebase-messaging-sw.js?${query}`,
-  );
+  const registration = await navigator.serviceWorker.register(`/firebase-messaging-sw.js?${query}`);
   // Yeni sürüm varsa hemen yüklensin; eski bildirim davranışı takılı kalmasın.
   await registration.update().catch(() => undefined);
   await navigator.serviceWorker.ready;

@@ -16,13 +16,27 @@ export const TIME_OPTIONS = ["Sabah", "Öğle", "Akşam"] as const;
 
 export const DIFFICULTY_OPTIONS: Difficulty[] = ["kolay", "orta", "zor"];
 
-export const DIFFICULTY_META: Record<Difficulty, { label: string; dots: number; points: number }> = {
-  kolay: { label: "Kolay", dots: 1, points: 1 },
-  orta: { label: "Orta", dots: 2, points: 2 },
-  zor: { label: "Zor", dots: 3, points: 3 },
-};
+export const DIFFICULTY_META: Record<Difficulty, { label: string; dots: number; points: number }> =
+  {
+    kolay: { label: "Kolay", dots: 1, points: 1 },
+    orta: { label: "Orta", dots: 2, points: 2 },
+    zor: { label: "Zor", dots: 3, points: 3 },
+  };
 
-export const ICON_OPTIONS = ["💧", "🧘", "📖", "🏃", "✍️", "💪", "🥗", "😴", "🚿", "🧹", "🎨", "📵"];
+export const ICON_OPTIONS = [
+  "💧",
+  "🧘",
+  "📖",
+  "🏃",
+  "✍️",
+  "💪",
+  "🥗",
+  "😴",
+  "🚿",
+  "🧹",
+  "🎨",
+  "📵",
+];
 
 /** Uygulamanın önerdiği hazır alışkanlıklar. */
 export type Suggestion = { name: string; icon: string; time: string; difficulty: Difficulty };
@@ -145,7 +159,10 @@ export function weekCells(habits: Habit[], today: Date): DayCell[] {
   return cells;
 }
 
-export function weekStats(habits: Habit[], today: Date): { done: number; total: number; pct: number } {
+export function weekStats(
+  habits: Habit[],
+  today: Date,
+): { done: number; total: number; pct: number } {
   const mon = startOfWeek(today);
   const todayKey = dateKey(today);
   let done = 0;

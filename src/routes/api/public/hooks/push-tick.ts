@@ -64,7 +64,6 @@ function ongoingText(items: Item[], minutes: number): { title: string; body: str
     return { title: `${clock} · Serbest zaman`, body: `Sırada ${next.start} · ${next.title}` };
   }
   return { title: `${clock} · Program tamam`, body: "Bugünlük planın bitti" };
-
 }
 
 export const Route = createFileRoute("/api/public/hooks/push-tick")({
@@ -134,10 +133,7 @@ export const Route = createFileRoute("/api/public/hooks/push-tick")({
                 update.last_ongoing = signature;
                 ongoing++;
               } else if (result.stale) {
-                await supabaseAdmin
-                  .from("push_devices")
-                  .delete()
-                  .eq("device_id", device.device_id);
+                await supabaseAdmin.from("push_devices").delete().eq("device_id", device.device_id);
                 continue;
               }
             }

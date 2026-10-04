@@ -20,7 +20,8 @@ export const Route = createFileRoute("/kayit")({
       { property: "og:title", content: "Kayıt Defteri — Momentum" },
       {
         property: "og:description",
-        content: "Takvimde geçmiş günlerini incele, istediğin güne not bırak. Veriler cihazında kalır.",
+        content:
+          "Takvimde geçmiş günlerini incele, istediğin güne not bırak. Veriler cihazında kalır.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -85,10 +86,7 @@ function KayitPage() {
     d.setDate(d.getDate() - i);
     last30.push(dateKey(d));
   }
-  const doneTotal = last30.reduce(
-    (sum, k) => sum + list.filter((h) => h.completions[k]).length,
-    0,
-  );
+  const doneTotal = last30.reduce((sum, k) => sum + list.filter((h) => h.completions[k]).length, 0);
   const activeDays = last30.filter((k) => list.some((h) => h.completions[k])).length;
   const noteCount = last30.filter((k) => notes?.[k]).length;
 

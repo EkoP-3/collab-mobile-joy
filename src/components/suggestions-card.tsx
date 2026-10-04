@@ -16,7 +16,9 @@ export function SuggestionsCard({ existingNames, onAdd }: Props) {
   return (
     <section className="glass-soft rounded-3xl border border-white/60 p-5 shadow-md shadow-brand/10">
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-lg font-semibold tracking-tight text-ink">Sana öneriler</h2>
+        <h2 className="font-display text-lg font-semibold tracking-tight text-ink">
+          Sana öneriler
+        </h2>
         {available.length > 4 && (
           <button
             type="button"
@@ -43,7 +45,9 @@ export function SuggestionsCard({ existingNames, onAdd }: Props) {
             <span className="text-[10px] font-bold uppercase tracking-wide text-inksoft">
               {DIFFICULTY_META[s.difficulty].label}
             </span>
-            <span className="grid size-5 place-items-center rounded-full bg-brand/10 text-brand">+</span>
+            <span className="grid size-5 place-items-center rounded-full bg-brand/10 text-brand">
+              +
+            </span>
           </button>
         ))}
       </div>

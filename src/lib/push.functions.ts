@@ -4,7 +4,10 @@ import { z } from "zod";
 const itemSchema = z.object({
   id: z.string().min(1).max(64),
   start: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
-  end: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).optional(),
+  end: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+    .optional(),
   title: z.string().min(1).max(120),
   remind: z.boolean(),
 });

@@ -21,7 +21,9 @@ export function StreakCard({ habits, today, current, best }: Props) {
           </p>
         </div>
         <div className="text-right">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">Rekor</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-inksoft">
+            Rekor
+          </p>
           <p className="font-display text-xl font-semibold text-accent-bright">{best}</p>
         </div>
       </div>

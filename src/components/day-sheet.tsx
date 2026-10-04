@@ -139,7 +139,9 @@ export function DaySheet({
                   } ${onMood ? "active:scale-90" : ""}`}
                 >
                   <span>{emoji}</span>
-                  <span className="text-[10px] font-semibold text-inksoft/80">{MOOD_LABELS[i]}</span>
+                  <span className="text-[10px] font-semibold text-inksoft/80">
+                    {MOOD_LABELS[i]}
+                  </span>
                 </button>
               ))}
             </div>

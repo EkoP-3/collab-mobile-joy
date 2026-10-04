@@ -35,15 +35,21 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - uses: android-actions/setup-android@v3
+      - name: Android SDK paketleri ve lisanslar
+        run: |
+          SDKM=$(ls "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager | head -n1)
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" "platforms;android-36" "build-tools;36.0.0"
 
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Bağımlılıkları kur
         run: bun install --frozen-lockfile
 
-      - name: Tür denetimi
-        run: bun run typecheck
+      - name: Tür denetimi ve lint
+        run: |
+          bun run typecheck
+          bun run lint
 
       - name: Web paketini derle ve Android projesine kopyala
         run: bun run cap:sync

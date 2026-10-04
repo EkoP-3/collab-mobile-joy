@@ -36,7 +36,10 @@ export function activeIndex(items: ScheduleItem[], now: Date): number {
   for (let i = 0; i < sorted.length; i++) {
     const cur = sorted[i]!;
     const start = timeToMinutes(cur.start);
-    const end = cur.end && isValidTime(cur.end) ? timeToMinutes(cur.end) : timeToMinutes(sorted[i + 1]?.start ?? "23:59");
+    const end =
+      cur.end && isValidTime(cur.end)
+        ? timeToMinutes(cur.end)
+        : timeToMinutes(sorted[i + 1]?.start ?? "23:59");
     if (mins >= start && mins < end) return i;
   }
   return -1;
@@ -85,9 +88,30 @@ export function saveSchedule(items: ScheduleItem[]): void {
 function seedSchedule(): ScheduleItem[] {
   return [
     { id: uid(), start: "07:00", end: "07:30", title: "Uyan ve su iç", remind: true, done: {} },
-    { id: uid(), start: "07:30", end: "08:00", title: "Meditasyon + esneme", remind: true, done: {} },
-    { id: uid(), start: "09:00", end: "12:30", title: "Derin çalışma bloğu", remind: true, done: {} },
-    { id: uid(), start: "13:00", end: "13:45", title: "Öğle yemeği ve yürüyüş", remind: false, done: {} },
+    {
+      id: uid(),
+      start: "07:30",
+      end: "08:00",
+      title: "Meditasyon + esneme",
+      remind: true,
+      done: {},
+    },
+    {
+      id: uid(),
+      start: "09:00",
+      end: "12:30",
+      title: "Derin çalışma bloğu",
+      remind: true,
+      done: {},
+    },
+    {
+      id: uid(),
+      start: "13:00",
+      end: "13:45",
+      title: "Öğle yemeği ve yürüyüş",
+      remind: false,
+      done: {},
+    },
     { id: uid(), start: "21:30", end: "22:00", title: "Kitap oku", remind: true, done: {} },
   ];
 }
