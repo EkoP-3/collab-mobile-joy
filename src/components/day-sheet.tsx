@@ -89,7 +89,7 @@ export function DaySheet({
                         } ${onToggleHabit ? "active:scale-[0.98]" : ""}`}
                       >
                         <span className="text-base">{h.icon}</span>
-                        <span className="flex-1 truncate">{h.name}</span>
+                        <span className="line-clamp-2 flex-1">{h.name}</span>
                         <span className={done ? "text-brand" : "text-inksoft/50"}>
                           {done ? "✓" : "—"}
                         </span>
@@ -116,7 +116,7 @@ export function DaySheet({
                     <span className="font-display text-xs font-bold text-brand">
                       {durationLabel(i)}
                     </span>
-                    <span className="flex-1 truncate font-medium text-ink">{i.title}</span>
+                    <span className="line-clamp-2 flex-1 font-medium text-ink">{i.title}</span>
                     <span className="text-brand">✓</span>
                   </li>
                 ))}

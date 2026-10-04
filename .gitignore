@@ -31,3 +31,22 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+# Ortam dosyaları (gizli) — örnek dosya hariç
+.env
+.env.*
+!.env.example
+
+# Android imzalama ve yerel dosyalar (ASLA commit'leme)
+*.jks
+*.keystore
+keystore.properties
+android/local.properties
+android/app/release/
+android/app/google-services.json
+android/.gradle/
+android/build/
+android/app/build/
+android/captures/
+
+# Üretilen çıktılar

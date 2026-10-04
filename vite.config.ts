@@ -6,6 +6,10 @@ import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 import { fileURLToPath } from "node:url";
 
+// `bun run build:app` (BUILD_TARGET=app) üretir: tamamen cihazda çalışan SPA paketi
+// (Capacitor/Android için). Varsayılan `bun run build` ise Vercel için SSR çıktısıdır.
+const isApp = process.env["BUILD_TARGET"] === "app";
+
 export default defineConfig(({ command, mode }) => {
   // VITE_* değişkenlerini hem istemci hem SSR tarafında sabitle.
   const env = loadEnv(mode, process.cwd(), "VITE_");
@@ -38,10 +42,11 @@ export default defineConfig(({ command, mode }) => {
         },
         // Sunucu girişi src/server.ts (SSR hata sarmalayıcısı).
         server: { entry: "server" },
+        ...(isApp ? { spa: { enabled: true, prerender: { outputPath: "/index.html" } } } : {}),
       }),
       // Üretim derlemesi Vercel için; başka bir hosta geçerken preset'i
       // (örn. "cloudflare-module", "node-server") burada değiştirin.
-      ...(command === "build" ? [nitro({ preset: "vercel" })] : []),
+      ...(command === "build" && !isApp ? [nitro({ preset: "vercel" })] : []),
       viteReact(),
     ],
   };

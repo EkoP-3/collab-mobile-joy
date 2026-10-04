@@ -36,14 +36,14 @@ export function HabitCard({ habit, today, done, onToggle, onEdit }: Props) {
       </div>
       <div className="min-w-0 flex-1">
         <p
-          className={`truncate font-display text-[15px] font-semibold tracking-tight ${
+          className={`line-clamp-2 font-display text-[15px] font-semibold leading-snug tracking-tight ${
             done ? "text-inksoft" : "text-ink"
           }`}
         >
           {habit.name}
         </p>
         <div className="mt-0.5 flex items-center gap-2">
-          <span className="truncate text-xs font-medium text-inksoft">{sub}</span>
+          <span className="min-w-0 text-xs font-medium text-inksoft">{sub}</span>
           <span
             className="shrink-0 rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand ring-1 ring-brand/20"
             title={`Zorluk: ${DIFFICULTY_META[habit.difficulty].label}`}

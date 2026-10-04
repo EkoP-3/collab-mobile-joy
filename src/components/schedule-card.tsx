@@ -88,7 +88,7 @@ export function ScheduleCard({ items, today, onToggle, onEdit, onAdd }: Props) {
                   }`}
                 >
                   <p
-                    className={`truncate text-[15px] font-semibold ${
+                    className={`line-clamp-2 text-[15px] font-semibold leading-snug ${
                       isDone ? "text-inksoft line-through" : "text-ink"
                     }`}
                   >

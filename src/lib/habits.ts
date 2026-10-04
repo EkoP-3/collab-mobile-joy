@@ -196,24 +196,23 @@ export function saveHabits(habits: Habit[]): void {
   }
 }
 
-/** First-run demo data with history relative to today, so streaks look alive. */
+/** İlk açılış için başlangıç alışkanlıkları: geçmiş/seri uydurulmaz, her şey sıfırdan başlar. */
 function seedHabits(): Habit[] {
-  const today = new Date();
-  const ago = (n: number) => {
-    const d = new Date(today);
-    d.setDate(d.getDate() - n);
-    return dateKey(d);
-  };
-  const span = (from: number, to: number) => {
-    const out: Record<string, boolean> = {};
-    for (let i = from; i <= to; i++) out[ago(i)] = true;
-    return out;
-  };
+  const createdAt = new Date().toISOString();
+  const starter = (name: string, icon: string, time: string, difficulty: Difficulty): Habit => ({
+    id: uid(),
+    name,
+    icon,
+    time,
+    difficulty,
+    createdAt,
+    completions: {},
+  });
   return [
-    { id: uid(), name: "8 bardak su iç", icon: "💧", time: "Sabah", difficulty: "kolay", createdAt: ago(30), completions: { ...span(6, 11), ...span(0, 4) } },
-    { id: uid(), name: "10 dk meditasyon", icon: "🧘", time: "Sabah", difficulty: "orta", createdAt: ago(20), completions: { ...span(6, 15), ...span(0, 4) } },
-    { id: uid(), name: "20 sayfa kitap oku", icon: "📖", time: "Akşam", difficulty: "zor", createdAt: ago(14), completions: span(1, 9) },
-    { id: uid(), name: "Akşam 30 dk yürüyüş", icon: "🏃", time: "Akşam", difficulty: "orta", createdAt: ago(45), completions: span(0, 11) },
-    { id: uid(), name: "Şükran günlüğü yaz", icon: "✍️", time: "Akşam", difficulty: "kolay", createdAt: ago(2), completions: span(1, 1) },
+    starter("8 bardak su iç", "💧", "Sabah", "kolay"),
+    starter("10 dk meditasyon", "🧘", "Sabah", "orta"),
+    starter("20 sayfa kitap oku", "📖", "Akşam", "zor"),
+    starter("Akşam 30 dk yürüyüş", "🏃", "Akşam", "orta"),
+    starter("Şükran günlüğü yaz", "✍️", "Akşam", "kolay"),
   ];
 }

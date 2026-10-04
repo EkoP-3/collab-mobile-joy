@@ -9,11 +9,11 @@ import { SuggestionsCard } from "@/components/suggestions-card";
 import { ScheduleCard } from "@/components/schedule-card";
 import { ScheduleSheet, type ScheduleDraft } from "@/components/schedule-sheet";
 import { ReminderBanner } from "@/components/reminder-banner";
-import { PushCard } from "@/components/push-card";
+import { NotificationCard } from "@/components/notification-card";
 import { useHabits } from "@/hooks/use-habits";
 import { useSchedule } from "@/hooks/use-schedule";
 import { useReminders } from "@/hooks/use-reminders";
-import { usePush } from "@/hooks/use-push";
+import { useNotifications } from "@/hooks/use-notifications";
 import { useMoods } from "@/hooks/use-moods";
 import { MoodCard } from "@/components/mood-card";
 import {
@@ -63,8 +63,9 @@ function Index() {
   const { habits, today, toggleToday, upsert, remove } = useHabits();
   const { items, upsert: upsertItem, remove: removeItem, toggleDone } = useSchedule();
   const scheduleItems = items ?? [];
-  const { permission, request } = useReminders(scheduleItems);
-  const push = usePush(scheduleItems);
+  const notify = useNotifications(scheduleItems);
+  // Tarayıcı hatırlatıcıları yalnızca web'de; Android'de native bildirimler kullanılır.
+  const { permission, request } = useReminders(notify.native ? [] : scheduleItems);
   const { moods, setMood } = useMoods(today ?? new Date());
   const [sheet, setSheet] = useState<{ open: boolean; habit?: Habit }>({ open: false });
   const [planSheet, setPlanSheet] = useState<{ open: boolean; item?: ScheduleItem }>({ open: false });
@@ -269,24 +270,29 @@ function Index() {
           onAdd={() => setPlanSheet({ open: true })}
         />
 
-        <PushCard
-          enabled={push.enabled}
-          ongoing={push.ongoing}
-          status={push.status}
-          busy={push.busy}
-          onEnable={() => void push.enable()}
-          onDisable={() => void push.turnOff()}
-          onToggleOngoing={push.toggleOngoing}
-          onTest={() => void push.sendTest()}
-        />
-
-        {!push.enabled && <ReminderBanner permission={permission} onRequest={request} />}
+        {notify.native ? (
+          <NotificationCard
+            enabled={notify.enabled}
+            ongoing={notify.ongoing}
+            reminders={notify.reminders}
+            status={notify.status}
+            busy={notify.busy}
+            onEnable={() => void notify.enable()}
+            onDisable={notify.disable}
+            onToggleOngoing={notify.toggleOngoing}
+            onToggleReminders={notify.toggleReminders}
+            onOpenNotificationSettings={notify.openNotificationSettings}
+            onOpenExactAlarmSettings={notify.openExactAlarmSettings}
+          />
+        ) : (
+          <ReminderBanner permission={permission} onRequest={request} />
+        )}
 
         <WeekCard habits={list} today={today} allDone={allDone} />
 
         <p className="pb-2 text-center text-xs font-medium text-inksoft/70">
-          Alışkanlıkların bu cihazda kalır · Hesap yok · Bildirim açıksa yalnızca program saatlerin
-          gönderilir
+          Alışkanlıkların ve programın yalnızca bu cihazda kalır · Hesap yok · Hiçbir veri sunucuya
+          gönderilmez
         </p>
       </main>
 

@@ -1,3 +1,5 @@
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/space-grotesk";
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -60,8 +62,8 @@
   --color-sun: var(--sun);
   --color-ink: var(--ink);
   --color-inksoft: var(--inksoft);
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Space Grotesk Variable", "Space Grotesk", "Inter Variable", sans-serif;
 }
 
 :root {
@@ -228,4 +230,10 @@
   ::selection {
     background: color-mix(in srgb, var(--brand) 25%, transparent);
   }
+}
+
+/* Çentik / durum çubuğu / hareket çubuğu altına taşmasın (Android edge-to-edge). */
+main {
+  padding-top: max(2rem, calc(env(safe-area-inset-top, 0px) + 1rem));
+  padding-bottom: max(2rem, calc(env(safe-area-inset-bottom, 0px) + 1rem));
 }
