@@ -39,9 +39,9 @@ export default defineConfig(({ command, mode }) => {
         // Sunucu girişi src/server.ts (SSR hata sarmalayıcısı).
         server: { entry: "server" },
       }),
-      // Üretim derlemesinde Cloudflare Workers hedefi; başka bir hosta geçerken
-      // preset'i (örn. "node-server") burada değiştirin.
-      ...(command === "build" ? [nitro({ preset: "cloudflare-module" })] : []),
+      // Üretim derlemesi Vercel için; başka bir hosta geçerken preset'i
+      // (örn. "cloudflare-module", "node-server") burada değiştirin.
+      ...(command === "build" ? [nitro({ preset: "vercel" })] : []),
       viteReact(),
     ],
   };
