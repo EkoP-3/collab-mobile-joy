@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as KayitRouteImport } from './routes/kayit'
-import { Route as ApiPublicHooksPushTickRouteImport } from './routes/api/public/hooks/push-tick'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,40 +22,31 @@ const KayitRoute = KayitRouteImport.update({
   path: '/kayit',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicHooksPushTickRoute = ApiPublicHooksPushTickRouteImport.update({
-  id: '/api/public/hooks/push-tick',
-  path: '/api/public/hooks/push-tick',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/kayit': typeof KayitRoute
-  '/api/public/hooks/push-tick': typeof ApiPublicHooksPushTickRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/kayit': typeof KayitRoute
-  '/api/public/hooks/push-tick': typeof ApiPublicHooksPushTickRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/kayit': typeof KayitRoute
-  '/api/public/hooks/push-tick': typeof ApiPublicHooksPushTickRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/kayit' | '/api/public/hooks/push-tick'
+  fullPaths: '/' | '/kayit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/kayit' | '/api/public/hooks/push-tick'
-  id: '__root__' | '/' | '/kayit' | '/api/public/hooks/push-tick'
+  to: '/' | '/kayit'
+  id: '__root__' | '/' | '/kayit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   KayitRoute: typeof KayitRoute
-  ApiPublicHooksPushTickRoute: typeof ApiPublicHooksPushTickRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -75,31 +65,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KayitRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/hooks/push-tick': {
-      id: '/api/public/hooks/push-tick'
-      path: '/api/public/hooks/push-tick'
-      fullPath: '/api/public/hooks/push-tick'
-      preLoaderRoute: typeof ApiPublicHooksPushTickRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   KayitRoute: KayitRoute,
-  ApiPublicHooksPushTickRoute: ApiPublicHooksPushTickRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
+import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

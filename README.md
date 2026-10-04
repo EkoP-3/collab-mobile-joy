@@ -28,6 +28,8 @@ bun run lint
 2. İş bitince çalıştırmanın sayfasında **Artifacts → momentum-debug-apk** dosyasını indir.
 3. APK'yı telefona gönder, kurulumda "bilinmeyen kaynaklara izin ver" de. Bildirimleri uygulama içinden aç.
 
+**Güncelleme:** Kodda değişiklik yapılınca GitHub yeni bir APK üretir. Yeni APK'yı indirip eskisinin **üstüne** kurman yeter; veriler korunur (debug APK'lar sabit bir imzayla çıkar). Play Store'a çıktıktan sonra güncellemeler telefonlara otomatik gelir.
+
 ### Kendi bilgisayarında (Android Studio varsa)
 
 ```sh

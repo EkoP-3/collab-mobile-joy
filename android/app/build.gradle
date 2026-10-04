@@ -29,6 +29,14 @@ android {
         }
     }
     signingConfigs {
+        // Herkese açık, sabit DEBUG anahtarı (gizli değil): CI'daki her debug APK aynı imzayla çıkar,
+        // böylece yeni APK eskisinin üstüne veri kaybı olmadan güncelleme olarak kurulur.
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
         release {
             def storePath = signingValue('MOMENTUM_KEYSTORE_FILE', 'storeFile')
             if (storePath) {
