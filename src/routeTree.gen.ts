@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ArenaRouteImport } from './routes/arena'
 import { Route as KayitRouteImport } from './routes/kayit'
 import { Route as ApiPublicHooksPushTickRouteImport } from './routes/api/public/hooks/push-tick'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArenaRoute = ArenaRouteImport.update({
+  id: '/arena',
+  path: '/arena',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KayitRoute = KayitRouteImport.update({
@@ -31,30 +37,34 @@ const ApiPublicHooksPushTickRoute = ApiPublicHooksPushTickRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/arena': typeof ArenaRoute
   '/kayit': typeof KayitRoute
   '/api/public/hooks/push-tick': typeof ApiPublicHooksPushTickRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/arena': typeof ArenaRoute
   '/kayit': typeof KayitRoute
   '/api/public/hooks/push-tick': typeof ApiPublicHooksPushTickRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/arena': typeof ArenaRoute
   '/kayit': typeof KayitRoute
   '/api/public/hooks/push-tick': typeof ApiPublicHooksPushTickRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/kayit' | '/api/public/hooks/push-tick'
+  fullPaths: '/' | '/arena' | '/kayit' | '/api/public/hooks/push-tick'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/kayit' | '/api/public/hooks/push-tick'
-  id: '__root__' | '/' | '/kayit' | '/api/public/hooks/push-tick'
+  to: '/' | '/arena' | '/kayit' | '/api/public/hooks/push-tick'
+  id: '__root__' | '/' | '/arena' | '/kayit' | '/api/public/hooks/push-tick'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArenaRoute: typeof ArenaRoute
   KayitRoute: typeof KayitRoute
   ApiPublicHooksPushTickRoute: typeof ApiPublicHooksPushTickRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/arena': {
+      id: '/arena'
+      path: '/arena'
+      fullPath: '/arena'
+      preLoaderRoute: typeof ArenaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kayit': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArenaRoute: ArenaRoute,
   KayitRoute: KayitRoute,
   ApiPublicHooksPushTickRoute: ApiPublicHooksPushTickRoute,
 }
